@@ -1,0 +1,53 @@
+<style>
+  .card-img{
+    width: 250px;
+    height: 200px;
+    overflow: hidden;
+  }
+  .card-img img{
+    width: 100%;
+    height: 100%;
+    transition: all 2s;
+  }
+  .card-img:hover img{
+    transform: scale(1.5);
+  }
+</style>
+
+{% extends "layout.html" %}
+
+{% block main_content %}
+
+{% include "products/imageslider.html" %}
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-4 g-4">
+    {% for p  in product %}
+ 
+    <div class="col">
+      <div class="card">
+        <div class="card-img">
+          <img src="/{{p.image}}" class="card-img-top" alt="{{p.product_name}}">
+
+        </div>
+        
+        <div class="card-body">
+          <h1 class="card-title">{{p.product_name}} </h1>
+          <h2 class="card-price">{{p.product_price}}</h2>
+          <div class="mb-2">
+            <button class="btn btn-primary">View Details</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+
+  </div>
+
+
+</div>
+
+
+
+{% endblock  %}

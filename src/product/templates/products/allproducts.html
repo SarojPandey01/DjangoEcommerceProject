@@ -1,0 +1,63 @@
+{% extends "admins/index.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+<title>Product List</title>
+{% endblock title %}
+
+{% block admin_content %}
+
+<div class="container mt-2 mb-4">
+    <div class="d-flex row justify-content-center">
+        <div class="col-md-10">
+            {% for msg in messages %}
+            {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success">
+                {{msg}}
+            </div>
+            {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="alert alert-danger">
+                {{msg}}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <h1 class="text-success text-center">All Product </h1>
+            <table class="table table-border">
+                <tr class="table-dark">
+                    <th>Product Name</th>
+                    <th>Product Price</th>
+                    <th>Quantity</th>
+                    <th>Image</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+                {%  for show_product in product %}
+                <tr>
+                    <td>{{show_product.product_name}}</td> 
+                    <td>{{show_product.product_price}}</td>
+                    <td>{{show_product.product_quantity}}</td>
+                    <td>
+                        <img src="/{{show_product.image}}" alt="{{show_product.product_name}}" width="200px">
+                    </td>
+                    <td>{{show_product.description}}</td>
+                    <td>{{show_product.category}}</td>
+                     <td>{{show_product.created_at}}</td>
+                     <td>
+                        <a href="{% url "updateproduct" show_product.id %}"><i class="bi bi-pencil-square text-success fs-3"></i></a>
+                        <a href="{% url "deleteproduct" show_product.id %}"><i class="bi bi-trash-fill text-danger fs-3" onclick="return alert('Are you sure want to delete?')"></i></a>
+                     </td>
+                    
+                </tr>
+                {% endfor %}
+
+            </table>
+        
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "admins/index.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+<title>Category List</title>
+{% endblock title %}
+
+{% block admin %}
+
+<div class="container mt-2 mb-4">
+    <div class="d-flex row justify-content-center">
+        <div class="col-md-8">
+            {% for msg in messages %}
+            {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success">
+                {{msg}}
+            </div>
+            {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="alert alert-danger">
+                {{msg}}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <h1 class="text-success text-center">Category Product </h1>
+            <table class="table table-border">
+                <tr class="table-dark">
+                    <th>Category Name</th>
+                    <th>Action </th>
+                </tr>
+                {%  for show_category in category %}
+                <tr>
+                    <td>{{show_category.category_name}}</td>              
+                     <td>
+                        <a href="{% url "updatecategory" show_category.id %}"><i class="bi bi-pencil-square text-success fs-3"></i></a>&nbsp; &nbsp;
+                        <a href="{% url "deletecategory" show_category.id %}"><i class="bi bi-trash-fill text-danger fs-3"></i></a>&nbsp;
+                     </td>
+                    
+                </tr>
+                {% endfor %}
+
+            </table>
+        
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
