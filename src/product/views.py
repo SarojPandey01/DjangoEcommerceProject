@@ -4,6 +4,7 @@ from . models import *
 from . forms import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from users.auth import admin_only
 
 
 
@@ -18,6 +19,11 @@ def home(request):
     }
     return render(request,'products/index.html',context)
 
+
+
+@login_required
+@admin_only
+
 def productlist(request):
     product = Product.objects.all()
     context={
@@ -27,6 +33,7 @@ def productlist(request):
 
 
 @login_required
+@admin_only
 def add_product(request):
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES)
@@ -43,7 +50,9 @@ def add_product(request):
     return render(request,'products/addproduct.html',context)
 
 
+
 @login_required
+@admin_only
 def add_category(request):
     if request.method == "POST":
         cat = ProductCategory(request.POST)
@@ -59,7 +68,9 @@ def add_category(request):
 
 
 
+
 @login_required
+@admin_only
 def update_product(request,product_id):
     instance = Product.objects.get(id=product_id)
     if request.method == "POST":
@@ -77,7 +88,9 @@ def update_product(request,product_id):
     return render(request, 'products/updateproduct.html', context)
 
 
+
 @login_required
+@admin_only
 def delete_product(request, product_id):
     isinstance= Product.objects.get(id=product_id)
     isinstance.delete()
@@ -95,6 +108,7 @@ def categorylist(request):
 
 
 @login_required
+@admin_only
 def update_category(request,category_id):
     instance = Category.objects.get(id=category_id)
     if request.method == "POST":
@@ -113,7 +127,9 @@ def update_category(request,category_id):
 
 
 
+
 @login_required
+@admin_only
 def delete_category(request, category_id):
     isinstance= Category.objects.get(id=category_id)
     isinstance.delete()

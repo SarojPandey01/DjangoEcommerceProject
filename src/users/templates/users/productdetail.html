@@ -15,6 +15,17 @@
 {% block main_content %}
   
 <div class="container my-5">
+    {% for msg in messages %}
+    {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success">
+        {{msg}}
+    </div>
+    {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <div class="alert alert-danger">
+        {{msg}}
+    </div>
+    {% endif %}
+    {% endfor %}
     <div class="d-flex justify-content-around row">
         <div class="col-md-4 shadow-lg">
             <div class="detail-img">
@@ -29,7 +40,7 @@
             <h3>Quantity:{{Product.quantity}}</h3>
             <p>{{product.description}}</p>
             <div class="mt-2">
-                <a href="" class="btn btn-primary">Add To Cart</a>
+                <a href="{% url 'addtocart' product.id %}" class="btn btn-primary">Add To Cart</a>
             </div>
 
 

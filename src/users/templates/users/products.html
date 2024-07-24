@@ -1,53 +1,86 @@
 <style>
-    .card-img{
-      width: 250px;
-      height: 200px;
-      overflow: hidden;
-    }
-    .card-img img{
-      width: 100%;
-      height: 100%;
-      transition: all 2s;
-    }
-    .card-img:hover img{
-      transform: scale(1.5);
-    }
-  </style>
-  
-  {% extends "layout.html" %}
-  
-  {% block main_content %}
-  
-  <div class="container my-5">
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-      {% for p  in product %}
-   
-      <div class="col">
-        <div class="card">
-          <div class="card-img">
-            <img src="/{{p.image}}" class="card-img-top" alt="{{p.product_name}}">
-  
-          </div>
-          
-          <div class="card-body">
-            <h1 class="card-title">{{p.product_name}} </h1>
-            <h2 class="card-price">{{p.product_price}}</h2>
-            <div class="mb-2">
-                <a href="{% url "productdetail" p.id %}">   <button class="btn btn-primary">View Details</button></a>
-           
-            </div>
-  
+  .card {
+    height: 200px;
+    width: 300px;
+  }
+
+  .card img {
+    height: 200px;
+    width: auto;
+  }
+
+  .card-img-top:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+    transition: all 1.2s;
+  }
+
+  .card {
+    overflow: hidden;
+  }
+  .container form label{
+    display: none;
+  }
+</style>
+
+{% extends 'layout.html'%}
+ {% block main_content %} 
+
+<div class="container-fluid">
+  <form action="" class="d-flex align-items-center my-2" method="get">
+    {{ product_filter.form}}
+    <button class="btn btn-primary ms-2" type="submit">Search Products</button>
+  </form>
+
+  <div class="row my-3">
+    {%for p in product %}
+    <div class="col-sm-6 col-md-4">
+      <div class="card my-3">
+        <img src="/{{p.image}}" class="card-img-top" alt="{{p.product_name}}" />
+        <div class="card-body">
+          <h5 class="card-title">{{p.product_name}}</h5>
+          <h2 class="card-price">{{p.product_price}}</h2>
+          <div class="mb-2">
+            <a href="{% url 'productdetail' p.id%}">
+              <button class="btn btn-primary">View Details</button>
+            </a>
           </div>
         </div>
       </div>
-      {% endfor %}
-  
-  
     </div>
-  
-  
+    {% endfor %}
   </div>
-  
-  
-  
-  {% endblock  %}
+</div>
+<div>
+  <nav aria-label="..." class="ms-3">
+    <ul class="pagination">
+      {% if product.has_previous %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="/products/?page={{product.previous_page_number}}"
+          >Previous</a
+        >
+      </li>
+      {% endif %}
+      <li class="page-item">
+        <a class="page-link" href="/products/?page=1">1</a>
+      </li>
+      <li class="page-item" aria-current="page">
+        <a class="page-link" href="/products/?page=2">2</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="/products/?page=3">3</a>
+      </li>
+      {% if product.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="/products/?page={{product.next_page_number}}"
+          >Next</a
+        >
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+{% endblock%}
