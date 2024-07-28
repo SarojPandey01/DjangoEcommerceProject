@@ -1,0 +1,35 @@
+{% extends "admins/index.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+<title>User List</title>
+{% endblock title %}
+
+{% block admin_content %}
+
+<div class="container mt-2 mb-4">
+    <div class="d-flex row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-success text-center">All Users </h1>
+            <table class="table table-bordered">
+                <tr class="table-dark">
+                    <th class="text-center">User ID</th>
+                    <th class=" text-center">Customer Name</th>
+                </tr>
+                {%  for u in user %}
+                <tr>
+                    <th>{{u.id}}</th>
+                    <th>{{u.username}}</th>
+                    
+                </tr>
+                {% endfor %}
+
+            </table>
+        
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

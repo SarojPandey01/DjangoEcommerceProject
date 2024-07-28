@@ -9,6 +9,8 @@ from . models import *
 from django.contrib.auth.decorators import login_required
 from . filters import *
 from django.core.paginator import Paginator
+from django.urls import reverse
+from django.views import View
 
 
 # Create your views here.
@@ -159,6 +161,12 @@ def order(request, product_id, cart_id):
             cart.delete()
             messages.add_message(request,messages.SUCCESS,'Ypur order has been succussfully ordered')
             return redirect('/myorder')
+        elif order.payment_method == 'Esewa':
+            return redirect(reverse('esewaform')+"?o_id="+str(order.id)+"&c_id="+str(cart.id))
+        else:
+            messages.add_message(request,messages.ERROR,'Kindly veify the files')
+            return render(request,'users/order.html',{'form':form})
+        
     context = {
         'form':OrderForm
     }
@@ -175,6 +183,123 @@ def myorder(request):
         'order':order
     }
     return render(request,'users/myorder.html',context)
+
+
+
+
+
+import hmac #cryptography algorithm
+import hashlib #encrypt data
+import uuid  #to generate random string 
+import base64
+class EsewaView(View):
+   def get(self,request,*args,**kwargs):
+        o_id=request.GET.get('o_id')
+        c_id=request.GET.get('c_id')
+        cart=Cart.objects.get(id=c_id)
+        order=Order.objects.get(id=o_id)
+        
+        
+        uuid_val=uuid.uuid4()
+        
+        def genSha256(key,message):
+            key=key.encode('utf-8')
+            message=message.encode('utf-8')
+
+            hmac_sha256=hmac.new(key,message,hashlib.sha256)
+
+            digest=hmac_sha256.digest()
+
+            signature=base64.b64encode(digest).decode('utf-8')
+            return signature
+        
+        secret_key='8gBm/:&EnhH.1/q'
+        data_to_sign=f"total_amount={order.total_price},transaction_uuid={uuid_val},product_code=EPAYTEST"
+        
+        result=genSha256(secret_key,data_to_sign)
+
+        data={
+            'amount':order.product.product_price,
+            'total_amount':order.total_price,
+            'transaction_uuid':uuid_val,
+            'product_code':'EPAYTEST',
+            'signature':result,
+        }
+        context={
+            'order':order,
+            'data':data,
+            'cart':cart
+        }
+        return render(request,'users/esewa_payment.html',context)
+        
+
+
+   def get(self,request,*args,**kwargs):
+        o_id=request.GET.get('o_id')
+        c_id=request.GET.get('c_id')
+        cart=Cart.objects.get(id=c_id)
+        order=Order.objects.get(id=o_id)
+        
+        
+        uuid_val=uuid.uuid4()
+        
+        def genSha256(key,message):
+            key=key.encode('utf-8')
+            message=message.encode('utf-8')
+
+            hmac_sha256=hmac.new(key,message,hashlib.sha256)
+
+            digest=hmac_sha256.digest()
+
+            signature=base64.b64encode(digest).decode('utf-8')
+            return signature
+        
+        secret_key='8gBm/:&EnhH.1/q'
+        data_to_sign=f"total_amount={order.total_price},transaction_uuid={uuid_val},product_code=EPAYTEST"
+        
+        result=genSha256(secret_key,data_to_sign)
+
+        data={
+            'amount':order.product.product_price,
+            'total_amount':order.total_price,
+            'transaction_uuid':uuid_val,
+            'product_code':'EPAYTEST',
+            'signature':result,
+        }
+        context={
+            'order':order,
+            'data':data,
+            'cart':cart
+        }
+        return render(request,'users/esewa_payment.html',context)
+
+
+import json
+@login_required
+def esewa_verify(request, order_id, cart_id):
+    if request.method == 'GET':
+        data =request.GET.get('data')
+        decoded_data = base64.b64decode(data).decode('utf-8')
+        map_data = json.loads(decoded_data)
+        order = Order.objects.get(id = order_id)
+        cart = Cart.objects.get(id =cart_id)
+
+
+        if map_data.get('status')=='COMPLETE':
+            order.payment_status = True
+            order.save()
+            cart.delete()
+            messages.add_message(request,messages.SUCCESS,'Payment Successful')
+            return redirect('/myorder')
+
+        else:
+            messages.add_message(request,messages.ERROR,'Failed to make a payment')
+            return redirect('/myorder')
+
+
+
+
+
 
 
 

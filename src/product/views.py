@@ -5,6 +5,7 @@ from . forms import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from users.auth import admin_only
+from users.models import *
 
 
 
@@ -135,6 +136,18 @@ def delete_category(request, category_id):
     isinstance.delete()
     messages.add_message(request,messages.SUCCESS,'Category deleted successfully')
     return redirect('/product/categorylist')
+
+
+
+def orderlist(request):
+    order =Order.objects.all()
+    context = {
+        'order':order
+    }
+    return render(request,'products/orderlist.html',context)
+
+
+
 
 
 

@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block title %}
-<title>Product List</title>
+<title>User List</title>
 {% endblock title %}
 
 {% block admin_content %}
@@ -22,31 +22,33 @@
             {% endif %}
             {% endfor %}
             <h1 class="text-success text-center">All Product </h1>
-            <table class="table table-border">
+            <table class="table table-bordered">
                 <tr class="table-dark">
+                    <th>Customer Name</th>
                     <th>Product Name</th>
                     <th>Product Price</th>
                     <th>Quantity</th>
                     <th>Image</th>
-                    <th>Description</th>
+                    <th>Payment Method</th>
                     <th>Category</th>
-                    <th>Created At</th>
-                    <th>Action</th>
+                    <th>Payment Status</th>
                 </tr>
-                {%  for show_product in product %}
+                {%  for o in order %}
                 <tr>
-                    <td>{{show_product.product_name}}</td> 
-                    <td>{{show_product.product_price}}</td>
-                    <td>{{show_product.product_quantity}}</td>
+                    <th>{{o.user.username}}</th>
+                    <td>{{o.product.product_name}}</td> 
+                    <td>{{o.product.product_price}}</td>
+                    <td>{{o.quantity}}</td>
                     <td>
-                        <img src="/{{show_product.image}}" alt="{{show_product.product_name}}" width="200px">
+                        <img src="/{{o.product.image}}" alt="{{o.product.product_name}}" width="200px">
                     </td>
-                    <td>{{show_product.description}}</td>
-                    <td>{{show_product.category}}</td>
-                     <td>{{show_product.created_at}}</td>
+                    <td>{{o.payment_method}}</td>
+                    <td>{{o.product.category}}</td>
                      <td>
-                        <a href="{% url "updateproduct" show_product.id %}"><i class="bi bi-pencil-square text-success fs-3"></i></a>
-                        <a href="{% url "deleteproduct" show_product.id %}"><i class="bi bi-trash-fill text-danger fs-3" onclick="return alert('Are you sure want to delete?')"></i></a>
+                     {% if o.payment_status == True %} <span class="text-success">Payment Completed</span>
+                      {% else %} 
+                      <span class="text-success">Payment Due</span>
+                      {% endif %}
                      </td>
                     
                 </tr>
