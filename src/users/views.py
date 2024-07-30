@@ -13,6 +13,7 @@ from django.urls import reverse
 from django.views import View
 
 
+
 # Create your views here.
 
 # def homepage(request):
@@ -295,6 +296,37 @@ def esewa_verify(request, order_id, cart_id):
         else:
             messages.add_message(request,messages.ERROR,'Failed to make a payment')
             return redirect('/myorder')
+        
+
+
+@login_required
+def user_profile(request):
+    user = User.objects.get(username = request.user)
+    context = {
+        'user':user
+    }
+    return render(request,'users/profile.html',context)
+
+def updateuser(request):
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            messages.add_message(request,messages.SUCCESS,'User Profile Updated Successfully')
+            return redirect('/userprofile')
+        else:
+            messages.add_message(request,messages.ERROR,'Kindly verify all the fields')
+            return render(request,'users/updateprofile.html',{'form':form})
+    context = {
+        'form':ProfileUpdateForm(instance=request.user)
+
+    }
+    return render(request,'users/updateprofile.html',context)
+    
+
+    
+
 
 
 

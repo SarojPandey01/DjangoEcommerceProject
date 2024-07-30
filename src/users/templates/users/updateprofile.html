@@ -1,0 +1,39 @@
+
+  
+  {% extends "layout.html" %}
+  {% load crispy_forms_tags %}
+  {% block title %}
+  <title>Ecommerce | Update User</title>
+  {% endblock title %}
+  
+  {% block main_content %}
+  
+  <div class="container mt-2 mb-4">
+    <div class="d-flex row justify-content-center">
+        <div class="col-md-8">
+            {% for msg in messages %}
+            {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success">
+                {{msg}}
+            </div>
+            {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="alert alert-danger">
+                {{msg}}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <h1 class="text-success text-center">Update Profile</h1>
+            <form action="" method="POST" class="shadow-lg p-3" enctype="multipart/form-data">
+                {% csrf_token%}
+                {{form | crispy}}
+                <div class="mb-2">
+                    <input type="submit" value="Save Profile" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+  
+  
+  
+  {% endblock  %}

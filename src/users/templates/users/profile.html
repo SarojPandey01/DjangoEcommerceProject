@@ -1,0 +1,45 @@
+
+  
+  {% extends "layout.html" %}
+  {% load crispy_forms_tags %}
+  {% block title %}
+  <title>Ecommerce | Profile</title>
+  {% endblock title %}
+  
+  {% block main_content %}
+  
+  <div class="container mt-2 mb-4">
+    <div class="d-flex row justify-content-center">
+        <div class="col-md-8">
+            {% for msg in messages %}
+            {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success">
+                {{msg}}
+            </div>
+            {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="alert alert-danger">
+                {{msg}}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <h1 class="text-success text-center">User Profile</h1>
+            <div class="container-fuild text-center p-3 shadow-lg">
+                <p><strong>Username :</strong>{{user.username}}</p>
+                <p><strong>First Nmae :</strong>{{user.first_name}}</p>
+                <p><strong>Last Name :</strong>{{user.last_name}}</p>
+                <p><strong>Email :</strong>{{user.email}}</p>
+                <div class="mt-2">
+                    <a href="{% url 'updateuser' %}">
+                        <input type="submit" value="Update Profile" class="btn btn-success rounded">
+                    </a>
+            
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+  
+  
+  
+  {% endblock  %}
